@@ -1,0 +1,47 @@
+# Ignore .NET build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.log
+*.user
+*.userosscache
+*.suo
+*.pdb
+*.cache
+*.ilk
+*.tmp
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+*.sln.docstates
+
+# Ignore Python build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ignore virtual environment directories
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Visual Studio Code settings
+.vscode/
