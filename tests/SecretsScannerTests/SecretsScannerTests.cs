@@ -1,7 +1,6 @@
-using System;
+using SecretsScanner;
 using System.IO;
 using Xunit;
-using SecretsScanner;
 
 namespace SecretsScannerTests
 {
@@ -11,11 +10,12 @@ namespace SecretsScannerTests
         public void TestScanForSecrets()
         {
             // Arrange
-            string codeFilePath = "../../data/SampleApp/Program.cs";
+            string codeFilePath = "../../../../../data/SampleApp/Program.cs";
+            string modelPath = "../../../../../codebert_with_secrets.onnx";
             string code = File.ReadAllText(codeFilePath);
 
             // Act
-            var secrets = Program.ScanForSecrets(code);
+            var secrets = SecretScanner.ScanForSecrets(code, modelPath);
 
             // Assert
             Assert.NotEmpty(secrets);
