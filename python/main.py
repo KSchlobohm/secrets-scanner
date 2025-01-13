@@ -1,6 +1,10 @@
 from transformers import AutoModel, AutoTokenizer
 import torch
-import json
+
+# Assumption 1: The file 'python/dotnet_code_snippets.txt' contains at least two code snippets separated by "\n---\n"
+# Assumption 2: The model expects inputs with keys 'input_ids' and 'attention_mask'
+# Assumption 3: The snippets are located in the same directory as this script
+# Assumption 4: This script is located in the 'python' directory
 
 def load_code_snippets(file_path):
     with open(file_path, 'r') as file:
@@ -13,7 +17,7 @@ def main():
 
     # Load example code snippets from a text file
     # assumes that the snippets are located in the same directory as this script,
-    #   and that this script is located in the python directory
+    # and that this script is located in the python directory
     example_code_snippets = load_code_snippets("python/dotnet_code_snippets.txt")
 
     all_inputs = []
@@ -40,8 +44,8 @@ def main():
     # Export the model to ONNX format
     torch.onnx.export(
         model,                                          # Model to export
-        tuple(combined_input.values()),                # Combined input tuple
-        "codebert_with_secrets.onnx",                  # Single output file name
+        tuple(combined_input.values()),                 # Combined input tuple
+        "codebert_with_secrets.onnx",                   # Single output file name
         input_names=list(combined_input.keys()),        # Names of the input tensors
         output_names=["output"],                        # Names of the output tensors
         dynamic_axes={                                  # Allow variable-length sequences
