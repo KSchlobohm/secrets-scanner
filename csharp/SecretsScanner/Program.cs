@@ -17,13 +17,6 @@ class Program
         }
 
         string codeFilePath = args[0];
-        if (!File.Exists(codeFilePath))
-        {
-            Console.WriteLine($"File not found: {codeFilePath}");
-            return;
-        }
-
-        string code = File.ReadAllText(codeFilePath);
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
@@ -45,7 +38,7 @@ class Program
             return;
         }
 
-        var secrets = SecretScanner.ScanForSecrets(code, modelPath);
+        var secrets = SecretScanner.ScanForSecrets(codeFilePath, modelPath);
 
         string output = JsonSerializer.Serialize(secrets, new JsonSerializerOptions { WriteIndented = true });
         Console.WriteLine(output);

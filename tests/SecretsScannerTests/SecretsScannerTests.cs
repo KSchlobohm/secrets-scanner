@@ -12,10 +12,9 @@ namespace SecretsScannerTests
             // Arrange
             string codeFilePath = "../../../../../data/SampleApp/Program.cs";
             string modelPath = "../../../../../codebert_with_secrets.onnx";
-            string code = File.ReadAllText(codeFilePath);
 
             // Act
-            var secrets = SecretScanner.ScanForSecrets(code, modelPath);
+            var secrets = SecretScanner.ScanForSecrets(codeFilePath, modelPath);
 
             // Assert
             Assert.NotEmpty(secrets);

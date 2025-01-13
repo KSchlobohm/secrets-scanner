@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SecretsScanner;
+﻿namespace SecretsScanner;
 
 public class SecretDetection
 {
     public string FileName { get; set; }
+    public string FullFileName { get; set; }
     public int LineNumber { get; set; }
     public string CodeSnippet { get; set; }
     public string SeverityLevel { get; set; }

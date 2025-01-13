@@ -2,16 +2,24 @@
 using Microsoft.ML.OnnxRuntime.Tensors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SecretsScanner;
 
 public class SecretScanner
 {
-    public static List<SecretDetection> ScanForSecrets(string code, string modelPath)
+    public static List<SecretDetection> ScanForSecrets(string codeFilePath, string modelPath)
     {
         var secrets = new List<SecretDetection>();
 
+        if (!File.Exists(codeFilePath))
+        {
+            Console.WriteLine($"File not found: {codeFilePath}");
+            return secrets;
+        }
+
+        string code = File.ReadAllText(codeFilePath);
         using var session = new InferenceSession(modelPath);
 
         // Tokenize the code
@@ -35,14 +43,19 @@ public class SecretScanner
         using var results = session.Run(input);
 
         // Process the results
+        var fileName = Path.GetFileName(codeFilePath);
         var output = results.First().AsEnumerable<float>().ToArray();
         for (int i = 0; i < output.Length; i++)
         {
-            if (output[i] > 0.5) // Threshold for detecting a secret
+            var codeSnippet = GetCodeSnippet(code, i);
+
+            if (!string.IsNullOrEmpty(codeSnippet) // This is valid code
+                    && output[i] > 0.5) // And a secret is detected with confidence exceeding this threshold
             {
                 secrets.Add(new SecretDetection
                 {
-                    FileName = "example.cs",
+                    FileName = fileName,
+                    FullFileName = codeFilePath,
                     LineNumber = i + 1,
                     CodeSnippet = GetCodeSnippet(code, i),
                     SeverityLevel = "High",
