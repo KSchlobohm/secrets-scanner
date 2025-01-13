@@ -1,0 +1,36 @@
+{
+	"name": "secrets-scanner",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11",
+	"runArgs": [
+        "--gpus",
+        "all"
+    ],
+	"customizations": {
+		"vscode": {	
+			"extensions": [
+				"ms-azuretools.vscode-bicep",
+				"ms-azuretools.vscode-docker",
+				"ms-dotnettools.csharp",
+                "ms-python.python",
+				"ms-vscode.PowerShell",
+                "github.copilot"
+			]
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/powershell:1": {
+			"version": "7.4.2",
+			"modules": "Az,SqlServer"
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/sshd:1": {},
+        "ghcr.io/devcontainers/features/dotnet:1": {
+            "version": "9.0"
+        }
+	},
+	// resolves error from torchvision
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgl1-mesa-glx && pip install --upgrade pip",
+	// resolves error: dubious ownership of the workspace folder
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
+}
