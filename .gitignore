@@ -45,6 +45,7 @@ venv.bak/
 
 # Ignore Visual Studio Code settings
 .vscode/
+.vs/
 
 # Ignore ONNX model files (expect each user to generate their own as a dependency)
 codebert_with_secrets.onnx
