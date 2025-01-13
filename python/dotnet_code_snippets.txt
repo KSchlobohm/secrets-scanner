@@ -1,50 +1,7 @@
-public class APIClient
-{
-    // Hardcoded API key (not recommended for production)
-    private const string API_KEY = "AKIA123456789EXAMPLE";
-
-    public static void Main(string[] args)
-    {
-        // Print a message to the console
-        Console.WriteLine("Connecting with API using key: " + API_KEY);
-    }
-}
+private const string API_KEY = "AKIA123456789EXAMPLE";
 ---
-public class EmailSender
-{
-    public static void Main(string[] args)
-    {
-        // SMTP server configuration
-        string smtpServer = "smtp.example.com";
-        int smtpPort = 587;
-        string smtpUser = "your-email@example.com";
-        string smtpPassword = "your-hardcoded-password"; // Hardcoded password (not recommended)
-
-        // Email message configuration
-        string fromEmail = "your-email@example.com";
-        string toEmail = "recipient@example.com";
-        string subject = "Test Email";
-        string body = "This is a test email sent from a C# application.";
-
-        try
-        {
-            // Create a new SmtpClient instance
-            SmtpClient client = new SmtpClient(smtpServer, smtpPort)
-            {
-                Credentials = new NetworkCredential(smtpUser, smtpPassword),
-                EnableSsl = true
-            };
-
-            // Create a new MailMessage instance
-            MailMessage mailMessage = new MailMessage(fromEmail, toEmail, subject, body);
-
-            // Send the email
-            client.Send(mailMessage);
-            Console.WriteLine("Email sent successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error sending email: " + ex.Message);
-        }
-    }
-}
+string smtpPassword = "your-hardcoded-password";
+---
+var password = "PASSWORD";
+---
+string password = "123456";
