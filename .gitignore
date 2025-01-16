@@ -49,6 +49,7 @@ venv.bak/
 
 # Ignore the training state management folder
 fine_tuned_unixcoder/
+results/
 
 # Ignore ONNX model files (expect each user to generate their own as a dependency)
 *.onnx
