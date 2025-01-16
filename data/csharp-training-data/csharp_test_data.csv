@@ -1,0 +1,41 @@
+text,label
+"Console.WriteLine(""Hello, World!"");",0
+"public const String key9 = ""flower"";",1
+"public static T Max<T>(T a, T b) where T : IComparable<T> { return a.CompareTo(b) > 0 ? a : b; }",0
+"public int Add(int a, int b) { return a + b; }",0
+"public var string key32 = ""flower"";",1
+public abstract class Shape { public abstract double GetArea(); },0
+"public var string key66 = ""sunshine"";",1
+"using (StreamReader sr = new StreamReader(""file.txt"")) { Console.WriteLine(sr.ReadToEnd()); }",0
+"public const string secret60 = ""admin123"";",1
+Console.ReadLine();,0
+"public int Add(int a, int b) { return a + b; }",0
+"public enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }",0
+"public const String secret69 = ""1234567890"";",1
+"public var String key16 = ""1234567890"";",1
+"public const String pass92 = ""abc123"";",1
+"public var String password26 = ""admin"";",1
+"public var string pass71 = ""123123"";",1
+"public var String pass15 = ""zaq12wsx"";",1
+"int[] numbers = Enumerable.Range(1, 100).ToArray();",0
+"public var string credentials42 = ""test123"";",1
+"public var String secret46 = ""football1"";",1
+public bool IsEven(int number) { return number % 2 == 0; },0
+"Console.WriteLine(""Hello, World!"");",0
+public void PrintList<T>(IEnumerable<T> items) { foreach (var item in items) Console.WriteLine(item); },0
+"public const String secret3 = ""123456"";",1
+"public var string secret35 = ""sunshine"";",1
+"public var String key8 = ""admin123"";",1
+public class Person { public string Name { get; set; } public int Age { get; set; } },0
+Console.ReadLine();,0
+"public var String pass77 = ""passw0rd"";",1
+"public const String password33 = ""football1"";",1
+"string[] fruits = { ""apple"", ""banana"", ""cherry"" };",0
+"public enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }",0
+"public const String password96 = ""123123"";",1
+"public var string credentials89 = ""password1"";",1
+"public var String password99 = ""1234567890"";",1
+public bool IsEven(int number) { return number % 2 == 0; },0
+"Console.WriteLine(""Hello, World!"");",0
+"public var String pass49 = ""1234"";",1
+"public enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }",0

@@ -1,0 +1,41 @@
+text,label
+"public var String credentials6 = ""hunter2"";",1
+"public var string credentials30 = ""puppy"";",1
+public abstract class Shape { public abstract double GetArea(); },0
+"public const string key85 = ""qwertyuiop"";",1
+"Dictionary<string, int> scores = new Dictionary<string, int> { { ""Alice"", 10 }, { ""Bob"", 20 } };",0
+"public var String secret86 = ""charlie"";",1
+"public const string secret91 = ""696969"";",1
+"public const String pass81 = ""password"";",1
+"public var String pass37 = ""test123"";",1
+"public const string secret88 = ""1234"";",1
+public interface IVehicle { void Drive(); },0
+"public string GetGreeting(string name) { return $""Hello, {name}!""; }",0
+"public const string password90 = ""admin123"";",1
+"public delegate int MathOperation(int x, int y);",0
+public abstract class Shape { public abstract double GetArea(); },0
+"File.WriteAllText(""output.txt"", ""Hello, File!"");",0
+"int[] numbers = Enumerable.Range(1, 100).ToArray();",0
+public abstract class Shape { public abstract double GetArea(); },0
+"public var String key74 = ""1234567"";",1
+DateTime now = DateTime.Now;,0
+int sum = numbers.Sum();,0
+"public var String password52 = ""abc123"";",1
+"public const string key36 = ""monkey"";",1
+public bool IsEven(int number) { return number % 2 == 0; },0
+"public var String credentials2 = ""batman"";",1
+"using (StreamReader sr = new StreamReader(""file.txt"")) { Console.WriteLine(sr.ReadToEnd()); }",0
+"public string GetGreeting(string name) { return $""Hello, {name}!""; }",0
+"public var String password13 = ""superuser"";",1
+"string[] fruits = { ""apple"", ""banana"", ""cherry"" };",0
+"using (StreamReader sr = new StreamReader(""file.txt"")) { Console.WriteLine(sr.ReadToEnd()); }",0
+for (int i = 0; i < 10; i++) { Console.WriteLine(i); },0
+"public var string pass65 = ""000000"";",1
+"Console.WriteLine(""Hello, World!"");",0
+"public var string pass61 = ""1234567"";",1
+Console.ReadLine();,0
+"public const string password17 = ""qwerty"";",1
+"public const string key5 = ""000000"";",1
+"public var String pass54 = ""welcome"";",1
+"public var String key64 = ""charlie"";",1
+public class Person { public string Name { get; set; } public int Age { get; set; } },0
