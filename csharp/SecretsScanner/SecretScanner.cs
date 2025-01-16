@@ -1,4 +1,6 @@
-﻿using Microsoft.ML.OnnxRuntime;
+﻿using Microsoft.Extensions.Primitives;
+using Microsoft.ML.Tokenizers;
+using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using System;
 using System.Collections.Generic;
@@ -9,80 +11,117 @@ namespace SecretsScanner;
 
 public class SecretScanner
 {
-    public static List<SecretDetection> ScanForSecrets(string codeFilePath, string modelPath)
+    public static List<DetectionResult> ScanForSecrets(string codeFilePath, string modelPath)
     {
-        var secrets = new List<SecretDetection>();
-
         if (!File.Exists(codeFilePath))
         {
             Console.WriteLine($"File not found: {codeFilePath}");
-            return secrets;
+            return default;
         }
 
-        string code = File.ReadAllText(codeFilePath);
+        string exampleCode = File.ReadAllText(codeFilePath);
+
+        // Run inference
+        return AnalyzeCode(modelPath, exampleCode);
+    }
+
+    static List<DetectionResult> AnalyzeCode(string modelPath, string code)
+    {
+        // Load ONNX model
         using var session = new InferenceSession(modelPath);
 
-        // Tokenize the code
-        var tokens = TokenizeCode(code);
+        var results = new List<DetectionResult>();
+        var lines = code.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-        // Convert long[,] to 1D array and get dimensions
-        int[] inputIdsDimensions = { tokens.InputIds.GetLength(0), tokens.InputIds.GetLength(1) };
-        long[] inputIdsFlat = tokens.InputIds.Cast<long>().ToArray();
-        var inputIdsTensor = new DenseTensor<long>(inputIdsFlat, inputIdsDimensions);
-
-        int[] attentionMaskDimensions = { tokens.AttentionMask.GetLength(0), tokens.AttentionMask.GetLength(1) };
-        long[] attentionMaskFlat = tokens.AttentionMask.Cast<long>().ToArray();
-        var attentionMaskTensor = new DenseTensor<long>(attentionMaskFlat, attentionMaskDimensions);
-
-        // Run the model
-        var input = new List<NamedOnnxValue>
+        for (int i = 0; i < lines.Length; i++)
         {
-            NamedOnnxValue.CreateFromTensor("input_ids", inputIdsTensor),
-            NamedOnnxValue.CreateFromTensor("attention_mask", attentionMaskTensor)
-        };
-        using var results = session.Run(input);
+            var line = lines[i].Trim();
 
-        // Process the results
-        var fileName = Path.GetFileName(codeFilePath);
-        var output = results.First().AsEnumerable<float>().ToArray();
-        for (int i = 0; i < output.Length; i++)
-        {
-            var codeSnippet = GetCodeSnippet(code, i);
+            // Skip empty or irrelevant lines
+            if (string.IsNullOrWhiteSpace(line)) continue;
 
-            if (!string.IsNullOrEmpty(codeSnippet) // This is valid code
-                    && output[i] > 0.5) // And a secret is detected with confidence exceeding this threshold
+            // Tokenize the line (simplified; replace with proper tokenizer logic)
+            var tokenizedInput = Tokenize(line);
+            if (tokenizedInput == null)
             {
-                secrets.Add(new SecretDetection
+                continue;
+            }
+
+            // Create ONNX input tensors
+            var inputIdsTensor = new DenseTensor<long>(tokenizedInput.InputIds, new[] { 1, tokenizedInput.InputIds.Length });
+            var attentionMaskTensor = new DenseTensor<long>(tokenizedInput.AttentionMask, new[] { 1, tokenizedInput.AttentionMask.Length });
+
+            var inputs = new List<NamedOnnxValue>
+            {
+                NamedOnnxValue.CreateFromTensor("input_ids", inputIdsTensor),
+                NamedOnnxValue.CreateFromTensor("attention_mask", attentionMaskTensor)
+            };
+
+            // Run inference
+            using var inferenceResults = session.Run(inputs);
+            var logits = inferenceResults.First().AsEnumerable<float>().ToArray();
+
+            // Apply softmax to get probabilities
+            var probabilities = Softmax(logits);
+            var predictedLabel = Array.IndexOf(probabilities, probabilities.Max());
+
+            // If the line is predicted to contain a secret, add it to the results
+            if (predictedLabel == 1)
+            {
+                results.Add(new DetectionResult
                 {
-                    FileName = fileName,
-                    FullFileName = codeFilePath,
                     LineNumber = i + 1,
-                    CodeSnippet = GetCodeSnippet(code, i),
-                    SeverityLevel = "High",
-                    Description = "Hard-coded secret detected"
+                    Snippet = line,
+                    Confidence = probabilities[1] // Confidence for label 1
                 });
             }
         }
 
-        return secrets;
+        return results;
     }
 
-    static Tokens TokenizeCode(string code)
+    static TokenizedInput Tokenize(string code)
     {
-        // Implement tokenization logic here
-        // This is a placeholder implementation
-        return new Tokens
+        var tokenizer = BpeTokenizer.Create("vocab.json", "merges.txt");
+
+        // Tokenize the input code
+        var encoding = tokenizer.EncodeToIds(code);
+
+        // Convert tokens to input IDs
+        var inputIds = encoding.Select(id => (long)id).ToArray();
+
+        // Create attention mask (1 for actual tokens, 0 for padding)
+        var attentionMask = new long[inputIds.Length];
+        for (int i = 0; i < inputIds.Length; i++)
         {
-            InputIds = new long[1, 1],
-            AttentionMask = new long[1, 1]
+            attentionMask[i] = 1;
+        }
+
+        return new TokenizedInput
+        {
+            InputIds = inputIds,
+            AttentionMask = attentionMask
         };
     }
 
-    static string GetCodeSnippet(string code, int lineNumber)
+    static float[] Softmax(float[] logits)
     {
-        var lines = code.Split('\n');
-        int start = Math.Max(0, lineNumber - 2);
-        int end = Math.Min(lines.Length - 1, lineNumber + 2);
-        return string.Join('\n', lines.Skip(start).Take(end - start + 1));
+        var maxLogit = logits.Max();
+        var expLogits = logits.Select(logit => MathF.Exp(logit - maxLogit)).ToArray();
+        var sumExpLogits = expLogits.Sum();
+        return expLogits.Select(expLogit => expLogit / sumExpLogits).ToArray();
+    }
+
+    class TokenizedInput
+    {
+        public long[] InputIds { get; set; }
+        public long[] AttentionMask { get; set; }
+    }
+
+    public class DetectionResult
+    {
+        public int LineNumber { get; set; }
+        public string Snippet { get; set; }
+        public float Confidence { get; set; }
     }
 }
