@@ -38,7 +38,7 @@ This project aims to develop a command-line tool to scan C# code for hard-coded 
    
    > **Note:** The required Python libraries were installed using the following command:
    > ```sh
-   > pip install onnx transformers torch==1.9.0
+   > pip install datasets onnx onnxruntime onnxruntime-tools transformers torch
    > ```
    
    ```sh
